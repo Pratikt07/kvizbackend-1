@@ -7,7 +7,7 @@ module.exports.authenticateUser = async (req, res) => {
                 email: req.body.email,
             },
         });
-        if (data == null) {
+        if (data == null || data.length) {
             res.json({
                 status: null,
             });
