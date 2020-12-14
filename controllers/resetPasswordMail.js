@@ -10,7 +10,10 @@ module.exports.resetPasswordMail = async (req, res) => {
             let data = await isUserExist(req.body.email);
             if (data == null || data.length == 0) return false;
 
-            let token = await bcrypt.hash(data.password, 10);
+            let token = await bcrypt.hash(
+                data.email + '' + data.created_at,
+                10
+            );
 
             let email = req.body.email;
             let link = `http://${req.get(

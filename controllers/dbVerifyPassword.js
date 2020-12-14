@@ -15,7 +15,10 @@ module.exports.dbVerifyPassword = async (req, res) => {
         if (data == null || data.length == 0)
             return { status: false, message: 'Not a valid User ' };
 
-        let result = await bcrypt.compare(data.password, token);
+        let result = await bcrypt.compare(
+            data.email + '' + data.created_at,
+            token
+        );
 
         if (result) {
             return { status: true, message: 'user sucessfully verified' };

@@ -12,7 +12,12 @@ module.exports.authenticateUser = async (req, res) => {
                 status: null,
             });
         }
-
+        if (!data.password) {
+            res.json({
+                status: false,
+                message: 'Try login with google',
+            });
+        }
         let match = await bcrypt.compare(req.body.password, data.password);
         if (match == true) return true;
         else return false;

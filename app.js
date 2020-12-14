@@ -13,6 +13,10 @@ const authRouter = require('./routes/googleAuthRoute');
 const authRedirectRouter = require('./routes/googleAuthRedirectiRoute');
 const resetMailRouter = require('./routes/resetPasswordMailRoute');
 const updatePasswordRouter = require('./routes/updatePasswordRoute');
+const db = require('./models/index');
+const {
+    googleStrategyCallback,
+} = require('./controllers/googleStrategyCallabck');
 const app = express();
 
 app.use(cors());
@@ -21,6 +25,28 @@ if (process.env.NODE_ENV === 'development') {
 }
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.clientID,
+            clientSecret: process.env.clientSecret,
+            callbackURL: '/auth/google/redirect',
+        },
+        googleStrategyCallback
+    )
+);
+
+app.use(passport.initialize());
+passport.serializeUser((user, done) => {
+    return done(null, user.user_id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    let user = await db.users.findByPk(id);
+    if (user == null) return done(null, false);
+
+    return done(null, user);
+});
 
 app.use('/', homeRoute);
 app.use('/register', registerRouter);
