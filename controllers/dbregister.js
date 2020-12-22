@@ -38,11 +38,12 @@ module.exports.registerUser = async (req, res) => {
             // Save user in the database
             let dbInsert = await db.users.create(user);
             let mailsent = await sendMail(mailOption);
-
+           
             console.log('Message sent: %s', mailsent.messageId);
             return true;
         }
     } catch (err) {
+        console.log(err);
         throw err;
     }
 };

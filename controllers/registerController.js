@@ -8,7 +8,8 @@ module.exports.register = async (req, res) => {
     } catch (err) {
         res.status(501).json({
             status: false,
-            msg: 'not registe',
+            msg: 'not register',
         });
+        
     }
 };

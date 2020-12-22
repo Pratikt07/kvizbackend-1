@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const db = require('../models/index');
 module.exports.authenticateUser = async (req, res) => {
     try {
+        console.log(req.body.email)
         let data = await db.users.findOne({
             where: {
                 email: req.body.email,
@@ -12,6 +13,7 @@ module.exports.authenticateUser = async (req, res) => {
                 status: null,
             });
         }
+        console.log(data);
         if (!data.password) {
             res.json({
                 status: false,

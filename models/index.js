@@ -45,5 +45,15 @@ Object.keys(db).forEach((modelName) => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.users = require('./users.js')(sequelize, Sequelize);
+db.question = require('./question.js')(sequelize, Sequelize);
+db.options = require('./options.js')(sequelize, Sequelize);
+db.categories = require('./categories.js')(sequelize,Sequelize);
+db.tags = require('./tags.js')(sequelize,Sequelize);
+db.question_tag = require('./question_tag.js')(sequelize, Sequelize);
+db.quiz.js = require('./quiz.js')(sequelize,Sequelize);
+
+
+
+
 
 module.exports = db;

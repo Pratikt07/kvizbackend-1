@@ -14,6 +14,11 @@ const authRedirectRouter = require('./routes/googleAuthRedirectiRoute');
 const resetMailRouter = require('./routes/resetPasswordMailRoute');
 const updatePasswordRouter = require('./routes/updatePasswordRoute');
 const db = require('./models/index');
+const addquestionRouter = require('./routes/addquestionRoute')
+const editquestionRouter = require('./routes/editquestionRoute')
+const addoptionContoller = require('./routes/addOptionRoute')
+const deleteQuestion = require('./routes/DeleteQuestionRoute')
+
 const {
     googleStrategyCallback,
 } = require('./controllers/googleStrategyCallabck');
@@ -56,5 +61,8 @@ app.use('/auth/google/redirect', authRedirectRouter);
 app.use('/login', loginRouter);
 app.use('/resetPassword', resetMailRouter);
 app.use('/updatePassword', updatePasswordRouter);
-
+app.use('/addquestion', addquestionRouter);
+app.use('/editquestion', editquestionRouter);
+app.use('/addoption',addoptionContoller);
+app.use('/delete',deleteQuestion);
 module.exports = app;
