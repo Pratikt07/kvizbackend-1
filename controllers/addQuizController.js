@@ -1,8 +1,13 @@
-const db = require('../models/index')
 
-module.exports.addquiz = (req, res) => {
+const { insertQuiz } = require('./quizAdd')
+
+module.exports.addquiz = async (req, res) => {
     try{
-        const isInserted =
+        const data = await insertQuiz(req, res);
+       console.log("data = "+data);
+         
+       
+       
     }catch (err) {
         console.error(err);
     }

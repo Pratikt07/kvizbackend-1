@@ -1,10 +1,12 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('quiz', {
+  const quiz =  sequelize.define('quiz', {
     quiz_id: {
-      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      type: Sequelize.INTEGER,
       allowNull: false,
-      primaryKey: true
+    primaryKey: true
+    
     },
     creator_id: {
       type: DataTypes.BIGINT,
@@ -13,7 +15,7 @@ module.exports = function(sequelize, DataTypes) {
         model: 'users',
         key: 'user_id'
       },
-      unique: "FK_quizCreator"
+      // unique: "FK_quizCreator"
     },
     created_at: {
       type: DataTypes.DATE,
@@ -36,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     quiz_thumbnail: {
-      type: DataTypes.BLOB,
+      type: DataTypes.BLOB('long'),
       allowNull: true
     },
     quiz_pin: {
@@ -62,7 +64,6 @@ module.exports = function(sequelize, DataTypes) {
       },
       {
         name: "user_id",
-        unique: true,
         using: "BTREE",
         fields: [
           { name: "creator_id" },
@@ -70,7 +71,6 @@ module.exports = function(sequelize, DataTypes) {
       },
       {
         name: "creator_id",
-        unique: true,
         using: "BTREE",
         fields: [
           { name: "creator_id" },
@@ -78,4 +78,7 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  quiz.removeAttribute("id");
+  return quiz;
 };
