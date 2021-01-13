@@ -1,9 +1,10 @@
 const {removeQuestion} = require('./questionDelete')
 
-module.exports.deleteQuestion = (req, res) =>{
+module.exports.deleteQuestion = async (req, res) => {
     try{
-        const data = removeQuestion(req, res);
-        if(data===0){
+        const data = await removeQuestion(req, res);
+        console.log("data = "+data);
+        if(data===false){
             res.json({
                 success : false,
                 msg:'Question doesn\'t exist'

@@ -3,10 +3,9 @@ module.exports = function(sequelize, DataTypes) {
   const quiz =  sequelize.define('quiz', {
     quiz_id: {
       autoIncrement: true,
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
-    primaryKey: true
-    
+      primaryKey: true
     },
     creator_id: {
       type: DataTypes.BIGINT,
@@ -14,8 +13,7 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'users',
         key: 'user_id'
-      },
-      // unique: "FK_quizCreator"
+      }
     },
     created_at: {
       type: DataTypes.DATE,
@@ -38,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     quiz_thumbnail: {
-      type: DataTypes.BLOB('long'),
+      type: DataTypes.BLOB,
       allowNull: true
     },
     quiz_pin: {
@@ -47,7 +45,16 @@ module.exports = function(sequelize, DataTypes) {
     },
     quiz_status: {
       type: DataTypes.TINYINT,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
+    },
+    quiz_catid: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'categories',
+        key: 'cat_id'
+      }
     }
   }, {
     sequelize,
@@ -63,22 +70,21 @@ module.exports = function(sequelize, DataTypes) {
         ]
       },
       {
-        name: "user_id",
+        name: "FK_quizCreator",
         using: "BTREE",
         fields: [
           { name: "creator_id" },
         ]
       },
       {
-        name: "creator_id",
+        name: "FK_catId_idx",
         using: "BTREE",
         fields: [
-          { name: "creator_id" },
+          { name: "quiz_catid" },
         ]
       },
     ]
   });
-
   quiz.removeAttribute("id");
   return quiz;
 };

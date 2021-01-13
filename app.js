@@ -8,8 +8,7 @@ var multer  = require('multer');
 const helpers = require('./controllers/helpers')
 const storage = require('./controllers/storageImg')
 let upload = multer({ storage: storage, fileFilter: helpers.imageFilter });
-// var busboy = require('connect-busboy');
-// const formidable = require('formidable');
+
 
 
 const homeRoute = require('./routes/homeRoute');
@@ -26,9 +25,9 @@ const editquestionRouter = require('./routes/editquestionRoute');
 const addoptionContoller = require('./routes/addOptionRoute');
 const deleteQuestion = require('./routes/DeleteQuestionRoute');
 const addQuiz = require('./routes/addQuizRoute');
-
-// var fileupload = require("express-fileupload");
-
+const createQuiz = require('./routes/createQuizRoute');
+const getCategoryRouter = require('./routes/getCategoriesRoute');
+const getquestionRouter = require('./routes/getQuestionRoute');
 const {
     googleStrategyCallback,
 } = require('./controllers/googleStrategyCallabck');
@@ -64,9 +63,7 @@ passport.deserializeUser(async (id, done) => {
 });
 
 
-
-// app.use(fileupload({safeFileNames: true, preserveExtension: true }));
-// app.use(busboy()); 
+ 
 
 
 app.use('/', homeRoute);
@@ -78,43 +75,12 @@ app.use('/login', loginRouter);
 app.use('/resetPassword', resetMailRouter);
 app.use('/updatePassword', updatePasswordRouter);
 app.use('/addquestion', addquestionRouter);
-app.use('/editquestion', editquestionRouter);
+app.use('/editquestion',upload.single('option_image'), editquestionRouter);
 app.use('/addoption',addoptionContoller);
-app.use('/delete',deleteQuestion);
+app.use('/deletequestion',deleteQuestion);
 app.use('/addquiz',upload.single('quiz_img'),addQuiz);
-
-
-
-// app.post("/image", upload.single('profile_pic'), async (req, res) => {
-//     try{
-
-       
-//         console.log("file = "+JSON.stringify( req.file));
-//         if(!req.file){
-//            return res.send("file not uploaded");
-//         }else{
-//            return res.send("file  uploadeded");
-//         }
-
-
-
-//         // console.log(req);
-//         // const form = formidable({ multiples: true });
-//         // form.parse(req, (err, fields, files) => {
-//         //     if(err){
-//         //         next(err);
-//         //         return;
-//         //     }
-//         //         res.writeHead(200, { 'content-type': 'application/json' });
-//         //         res.end(JSON.stringify({ fields, files }, null, 2));
-//         //         return ; 
-//         //});  
-         
-//     }catch(err) {
-//         console.log(err);
-//         res.status(400).send("Something went wrong!");
-           
-//     }
- 
-//  });
+app.use('/createquiz',createQuiz);
+app.use('/getallcategories',getCategoryRouter);
+app.use('/getquestions',getquestionRouter)
+// app.use('/editQuiz',editQuizRouter);
 module.exports = app;

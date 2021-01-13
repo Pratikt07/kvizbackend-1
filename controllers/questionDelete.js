@@ -1,38 +1,18 @@
 
 const db = require('../models/index')
+const { sequelize } = require('../models/index');
 
 module.exports.removeQuestion = async (req, res) =>{
     try{
-        console.log(req.query.id);
-        let Q = db.question.findOne({
-            where: {
-                question_id : req.query.id
-            }
-        });
-        if(Q){
-             const Qtag =  await db.question_tag.findOne({
-                where: {
-                    question_id: req.query.id
-                }
-            })
-            
-            await db.question.destroy({
-                where: {
-                   question_id : req.query.id
-                }
-            })
-            await db.tags.destroy({
-                where: {
-                    tag_id : Qtag.tag_id
-                }
-            })
-           
-            return true;
-        }
-        else{
-            return 0;
-        }
-
+        
+        var quiz_id = req.body.quiz_id;
+        var question_statement = req.body.question_statement;
+        var question_id = req.body.question_id;
+        var query = `call delete_question_details("${quiz_id}","${question_statement}","${question_id}")`
+    
+        let procedureCall =   await sequelize.query(query).then(v=>console.log(v));
+        return true;
+      
     }
     catch(err){
   

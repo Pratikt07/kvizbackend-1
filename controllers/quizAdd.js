@@ -1,7 +1,6 @@
 const db = require('../models/index');
 const fs = require("fs");
 const root = require('../rootPath');
-var path = require('path');
 
 
 
@@ -10,47 +9,28 @@ module.exports.insertQuiz = async ( req, res) => {
 
  try{
     let obj;
-    console.log("file = "+req.file)
-    console.log(req.body);
-        if( await isQuizExist(req) ){
-            console.log('User Exist');
-            return  res.status(501).json({
-                status: false, 
-                message : "Quiz Already Exist",
-                });
-        }
-        else{
-
-            
-         //console.log(req.body);
-
+    const catId = await getCatId(req.body.cat_name);
         if(req.file==undefined){
             obj = fs.readFileSync(root + '/resources/static/assets/uploads/quizPic.jpg' );
-          
           }       
-         else {
-             console.log(req.file.path);
-              obj = fs.readFileSync(req.file.path );
-              console.log( "obj not exist  = "+obj);
-              
-       }
-    }
-  
-         console.log("Adding Quiz");
-         const dbInsert =  await db.quiz.create(
+        else{  
+            obj = fs.readFileSync(req.file.path );         
+        }
+         const dbUpdate =  await db.quiz.update(
              { 
-                 creator_id : req.body.creator_id,
-                 created_at : Date.now(),
-                 title : req.body.title,
+                quiz_catid : catId,
+                created_at : Date.now(),
                 description : req.body.description,
-                overall_timer : null,
+                overall_timer : req.body.overall_timer,
                 quiz_present_date : Date.now(),
                 quiz_thumbnail : obj ,
                 quiz_pin : req.body.quiz_pin,
                 quiz_status: false
-            })
+            },
+            {where : { quiz_id : req.body.quiz_id}
+        })
 
-            if(dbInsert ){
+            if(dbUpdate ){
                 return res.status(201).json({
                     status: true, 
                     message : "Quiz Added Successfuly",
@@ -61,18 +41,15 @@ module.exports.insertQuiz = async ( req, res) => {
                   status: false, 
                   message : "Quiz Added Failed",
                   });;
-              }
-            
-            
+              }            
     }
-
     catch (err) {
-        console.log("===================Failed============================");
+        
         console.log(err);
         return res.status(501).json({
             status: false, 
             message : "Error occured",
-            });;
+            });
     }
 
 
@@ -80,25 +57,19 @@ module.exports.insertQuiz = async ( req, res) => {
 
 
 
-const isQuizExist = async (req) => {
-    try{
-        console.log("files = " +req);
-        let data = await db.quiz.findOne({
-            where: {
-                creator_id : req.body.creator_id,
-                title : req.body.title,
-                description : req.body.description
 
-            },
-        });
-        console.log("Exist or Not = "+data);
-        if (data == null) return false;
-        else return true;
-    }catch(e){
-        console.log("===================Failed============================");
-        throw e;
+
+
+async function getCatId(catname){
+    try{
+        const [cat, created] = await db.categories.findOrCreate({
+            where: { Cat_name : catname}
+            
+        })
+        console.log(created);
+        return cat.Cat_id;
+    }
+    catch(err){
+        console.log(err);
     }
 }
-
-
-

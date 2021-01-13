@@ -9,14 +9,14 @@ module.exports.addquestion = async (req, res) =>{
             return false;
         }
         else{
-            console.log('cname = '+req.body.Cat_name)
-            const catId = await getCatId(req.body.Cat_name);
+            console.log('cname = '+req.body.cat_name)
+            const catId = await getCatId(req.body.cat_name);
 
             console.log("Adding Question");
             let dbInsert = await db.question.create(
                 { 
                     quiz_id : req.body.quiz_id,
-                    Cat_id : catId,
+                    cat_id : catId,
                     question_type : req.body.question_type,
                     question_statement : req.body.question_statement,
                     serial_no : req.body.serial_no,
@@ -56,13 +56,13 @@ module.exports.addquestion = async (req, res) =>{
 async function getCatId(catname){
     try{
         const [cat, created] = await db.categories.findOrCreate({
-            where: { Cat_name : catname}
+            where: { cat_name : catname}
             
         })
-        console.log("Cat id = "+cat.Cat_id);
-        console.log("Cat name = "+cat.Cat_name);
+        console.log("Cat id = "+cat.cat_id);
+        console.log("Cat name = "+cat.cat_name);
         console.log("created "+created);
-        return cat.Cat_id;
+        return cat.cat_id;
     }
     catch(err){
         console.log(err);
